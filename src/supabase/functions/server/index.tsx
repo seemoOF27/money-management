@@ -67,6 +67,7 @@ app.post('/make-server-5e068ea9/signup', async (c) => {
     await kv.set(`debts:${data.user.id}`, []);
     await kv.set(`investments:${data.user.id}`, []);
     await kv.set(`operations:${data.user.id}`, []);
+    await kv.set(`incomeSources:${data.user.id}`, []);
 
     return c.json({ success: true, user: data.user });
   } catch (error) {
@@ -670,6 +671,111 @@ app.post('/make-server-5e068ea9/investments/transfer', async (c) => {
     return c.json({ transaction });
   } catch (error) {
     console.log('Error creating investment:', error);
+    return c.json({ error: String(error) }, 500);
+  }
+});
+
+// ============== Income Sources Routes ==============
+
+app.get('/make-server-5e068ea9/income-sources', async (c) => {
+  try {
+    const accessToken = c.req.header('Authorization')?.split(' ')[1];
+    const { data: { user }, error } = await supabase.auth.getUser(accessToken);
+    
+    if (!user?.id || error) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    const incomeSources = await kv.get(`incomeSources:${user.id}`) || [];
+    return c.json({ incomeSources });
+  } catch (error) {
+    console.log('Error fetching income sources:', error);
+    return c.json({ error: String(error) }, 500);
+  }
+});
+
+app.post('/make-server-5e068ea9/income-sources', async (c) => {
+  try {
+    const accessToken = c.req.header('Authorization')?.split(' ')[1];
+    const { data: { user }, error } = await supabase.auth.getUser(accessToken);
+    
+    if (!user?.id || error) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    const incomeData = await c.req.json();
+    const incomeSources = await kv.get(`incomeSources:${user.id}`) || [];
+    
+    const newIncomeSource = {
+      id: crypto.randomUUID(),
+      ...incomeData,
+      createdAt: new Date().toISOString()
+    };
+
+    incomeSources.push(newIncomeSource);
+    await kv.set(`incomeSources:${user.id}`, incomeSources);
+
+    await logOperation(user.id, 'إضافة', 'مصدر دخل', null, newIncomeSource);
+
+    return c.json({ incomeSource: newIncomeSource });
+  } catch (error) {
+    console.log('Error creating income source:', error);
+    return c.json({ error: String(error) }, 500);
+  }
+});
+
+app.put('/make-server-5e068ea9/income-sources/:id', async (c) => {
+  try {
+    const accessToken = c.req.header('Authorization')?.split(' ')[1];
+    const { data: { user }, error } = await supabase.auth.getUser(accessToken);
+    
+    if (!user?.id || error) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    const incomeId = c.req.param('id');
+    const updates = await c.req.json();
+    const incomeSources = await kv.get(`incomeSources:${user.id}`) || [];
+    
+    const index = incomeSources.findIndex((i: any) => i.id === incomeId);
+    if (index === -1) {
+      return c.json({ error: 'Income source not found' }, 404);
+    }
+
+    const oldIncomeSource = incomeSources[index];
+    incomeSources[index] = { ...oldIncomeSource, ...updates };
+    await kv.set(`incomeSources:${user.id}`, incomeSources);
+
+    await logOperation(user.id, 'تعديل', 'مصدر دخل', oldIncomeSource, incomeSources[index]);
+
+    return c.json({ incomeSource: incomeSources[index] });
+  } catch (error) {
+    console.log('Error updating income source:', error);
+    return c.json({ error: String(error) }, 500);
+  }
+});
+
+app.delete('/make-server-5e068ea9/income-sources/:id', async (c) => {
+  try {
+    const accessToken = c.req.header('Authorization')?.split(' ')[1];
+    const { data: { user }, error } = await supabase.auth.getUser(accessToken);
+    
+    if (!user?.id || error) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    const incomeId = c.req.param('id');
+    const incomeSources = await kv.get(`incomeSources:${user.id}`) || [];
+    
+    const deletedIncomeSource = incomeSources.find((i: any) => i.id === incomeId);
+    const filtered = incomeSources.filter((i: any) => i.id !== incomeId);
+    await kv.set(`incomeSources:${user.id}`, filtered);
+
+    await logOperation(user.id, 'حذف', 'مصدر دخل', deletedIncomeSource, null);
+
+    return c.json({ success: true });
+  } catch (error) {
+    console.log('Error deleting income source:', error);
     return c.json({ error: String(error) }, 500);
   }
 });

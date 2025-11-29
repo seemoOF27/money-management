@@ -6,7 +6,8 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
 import { 
   Plus, Edit2, Trash2, DollarSign, ShoppingCart, Coffee, Car, 
   Home, Smartphone, Heart, Utensils, Film, GraduationCap,
-  ShoppingBag, Zap, Wifi, CheckCircle, XCircle, ChevronDown, ChevronUp, X
+  ShoppingBag, Zap, Wifi, CheckCircle, XCircle, ChevronDown, ChevronUp, X,
+  Wallet, Receipt, TrendingUp, TrendingDown, AlertCircle, PiggyBank
 } from 'lucide-react';
 
 type Budget = {
@@ -509,7 +510,12 @@ export function BudgetsTab({ userData }: { userData: any }) {
         <div className="grid grid-cols-2 gap-3 flex-1">
           {/* الصف الأول */}
           <div className="bg-white rounded-xl p-4 border-r-4 border-purple-500 shadow-sm">
-            <p className="text-sm text-gray-600 mb-1">إجمالي الدخل</p>
+            <div className="flex items-start justify-between mb-1">
+              <p className="text-sm text-gray-600">إجمالي الدخل</p>
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <Wallet size={20} className="text-purple-600" />
+              </div>
+            </div>
             <p className="text-2xl text-purple-700">{totalIncome.toFixed(0)}</p>
             <p className="text-xs text-gray-500">ريال</p>
             {additionalIncome > 0 && (
@@ -519,26 +525,46 @@ export function BudgetsTab({ userData }: { userData: any }) {
             )}
           </div>
           <div className="bg-white rounded-xl p-4 border-r-4 border-orange-500 shadow-sm">
-            <p className="text-sm text-gray-600 mb-1">فواتير مسددة</p>
+            <div className="flex items-start justify-between mb-1">
+              <p className="text-sm text-gray-600">فواتير مسددة</p>
+              <div className="p-2 bg-orange-100 rounded-lg">
+                <Receipt size={20} className="text-orange-600" />
+              </div>
+            </div>
             <p className="text-2xl text-orange-700">{paidBills.toFixed(0)}</p>
             <p className="text-xs text-gray-500">ريال</p>
           </div>
           
           {/* الصف الثاني */}
           <div className="bg-white rounded-xl p-4 border-r-4 border-emerald-500 shadow-sm">
-            <p className="text-sm text-gray-600 mb-1">الميزانيات</p>
+            <div className="flex items-start justify-between mb-1">
+              <p className="text-sm text-gray-600">الميزانيات</p>
+              <div className="p-2 bg-emerald-100 rounded-lg">
+                <PiggyBank size={20} className="text-emerald-600" />
+              </div>
+            </div>
             <p className="text-2xl text-emerald-700">{totalBudgetAmount.toFixed(0)}</p>
             <p className="text-xs text-gray-500">ريال</p>
           </div>
           <div className="bg-white rounded-xl p-4 border-r-4 border-teal-500 shadow-sm">
-            <p className="text-sm text-gray-600 mb-1">متبقي الميزانيات</p>
+            <div className="flex items-start justify-between mb-1">
+              <p className="text-sm text-gray-600">متبقي الميزانيات</p>
+              <div className="p-2 bg-teal-100 rounded-lg">
+                <TrendingUp size={20} className="text-teal-600" />
+              </div>
+            </div>
             <p className="text-2xl text-teal-700">{Math.max(0, totalBudgetAmount - totalSpent).toFixed(0)}</p>
             <p className="text-xs text-gray-500">ريال</p>
           </div>
           
           {/* الصف الثالث */}
           <div className="bg-white rounded-xl p-4 border-r-4 border-red-500 shadow-sm">
-            <p className="text-sm text-gray-600 mb-1">المنصرف فعلياً</p>
+            <div className="flex items-start justify-between mb-1">
+              <p className="text-sm text-gray-600">المنصرف فعلياً</p>
+              <div className="p-2 bg-red-100 rounded-lg">
+                <TrendingDown size={20} className="text-red-600" />
+              </div>
+            </div>
             <p className="text-2xl text-red-700">{totalSpent.toFixed(0)}</p>
             <p className="text-xs text-gray-500">ريال</p>
           </div>
@@ -547,7 +573,16 @@ export function BudgetsTab({ userData }: { userData: any }) {
               ? 'border-blue-500' 
               : 'border-red-500'
           }`}>
-            <p className="text-sm text-gray-600 mb-1">المتبقي</p>
+            <div className="flex items-start justify-between mb-1">
+              <p className="text-sm text-gray-600">المتبقي</p>
+              <div className={`p-2 rounded-lg ${remainingFromIncome >= 0 ? 'bg-blue-100' : 'bg-red-100'}`}>
+                {remainingFromIncome >= 0 ? (
+                  <AlertCircle size={20} className="text-blue-600" />
+                ) : (
+                  <AlertCircle size={20} className="text-red-600" />
+                )}
+              </div>
+            </div>
             <p className={`text-2xl ${remainingFromIncome >= 0 ? 'text-blue-700' : 'text-red-700'}`}>
               {remainingFromIncome.toFixed(0)}
             </p>
