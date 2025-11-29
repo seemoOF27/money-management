@@ -7,7 +7,7 @@ import {
   Plus, Edit2, Trash2, DollarSign, ShoppingCart, Coffee, Car, 
   Home, Smartphone, Heart, Utensils, Film, GraduationCap,
   ShoppingBag, Zap, Wifi, CheckCircle, XCircle, ChevronDown, ChevronUp, X,
-  Wallet, Receipt, TrendingUp, TrendingDown, AlertCircle, PiggyBank
+  Wallet, Receipt, TrendingUp, TrendingDown, AlertCircle, Banknote
 } from 'lucide-react';
 
 type Budget = {
@@ -540,7 +540,7 @@ export function BudgetsTab({ userData }: { userData: any }) {
             <div className="flex items-start justify-between mb-1">
               <p className="text-sm text-gray-600">الميزانيات</p>
               <div className="p-2 bg-emerald-100 rounded-lg">
-                <PiggyBank size={20} className="text-emerald-600" />
+                <Banknote size={20} className="text-emerald-600" />
               </div>
             </div>
             <p className="text-2xl text-emerald-700">{totalBudgetAmount.toFixed(0)}</p>
