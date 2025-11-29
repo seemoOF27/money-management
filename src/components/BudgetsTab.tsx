@@ -1311,30 +1311,47 @@ export function BudgetsTab({ userData }: { userData: any }) {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-gray-700 mb-2">الأيقونة</label>
-                  <select
-                    value={billForm.icon}
-                    onChange={(e) => setBillForm({ ...billForm, icon: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    {iconOptions.map((opt) => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
-                    ))}
-                  </select>
+              <div>
+                <label className="block text-gray-700 mb-2">الأيقونة</label>
+                <div className="grid grid-cols-6 gap-2">
+                  {iconOptions.map((opt) => {
+                    const IconComponent = opt.icon;
+                    return (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => setBillForm({ ...billForm, icon: opt.value })}
+                        className={`p-3 rounded-lg border-2 transition-all ${
+                          billForm.icon === opt.value
+                            ? 'border-orange-500 bg-orange-50 text-orange-700'
+                            : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                        }`}
+                        title={opt.label}
+                      >
+                        <IconComponent size={24} />
+                      </button>
+                    );
+                  })}
                 </div>
-                <div>
-                  <label className="block text-gray-700 mb-2">اللون</label>
-                  <select
-                    value={billForm.color}
-                    onChange={(e) => setBillForm({ ...billForm, color: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    {colorOptions.map((opt) => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
-                    ))}
-                  </select>
+              </div>
+
+              <div>
+                <label className="block text-gray-700 mb-2">اللون</label>
+                <div className="flex gap-2 flex-wrap">
+                  {colorOptions.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setBillForm({ ...billForm, color: opt.value })}
+                      className={`w-12 h-12 rounded-lg border-2 transition-all ${
+                        billForm.color === opt.value
+                          ? 'border-gray-800 scale-110'
+                          : 'border-gray-200 hover:border-gray-400'
+                      }`}
+                      style={{ backgroundColor: opt.color }}
+                      title={opt.label}
+                    />
+                  ))}
                 </div>
               </div>
 
