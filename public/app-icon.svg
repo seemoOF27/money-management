@@ -1,0 +1,44 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle with gradient -->
+  <circle cx="256" cy="256" r="246" fill="url(#gradient)"/>
+  
+  <!-- Wallet Icon -->
+  <g transform="translate(128, 128)">
+    <!-- Wallet body -->
+    <rect x="20" y="85" width="215" height="150" rx="16" fill="white" opacity="0.95"/>
+    
+    <!-- Wallet flap -->
+    <path 
+      d="M 34 85 L 34 51 C 34 38 43 29 56 29 L 199 29 C 212 29 221 38 221 51 L 221 85" 
+      fill="white" 
+      opacity="0.8"
+    />
+    
+    <!-- Card slot -->
+    <rect x="51" y="120" width="154" height="13" rx="6" fill="#059669" opacity="0.6"/>
+    
+    <!-- Money symbol - Riyal -->
+    <text 
+      x="80" 
+      y="185" 
+      font-family="Arial, sans-serif" 
+      font-size="68" 
+      font-weight="bold" 
+      fill="#059669"
+    >
+      ر.س
+    </text>
+    
+    <!-- Coins -->
+    <circle cx="192" cy="205" r="34" fill="#fbbf24" stroke="white" stroke-width="8"/>
+    <circle cx="64" cy="205" r="26" fill="#fbbf24" stroke="white" stroke-width="6"/>
+  </g>
+  
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+</svg>

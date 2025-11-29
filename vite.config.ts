@@ -5,6 +5,10 @@
 
   export default defineConfig({
     plugins: [react()],
+    // Set base for GitHub Pages deployment
+    // Format: /repository-name/
+    // Repository name: money-management
+    base: process.env.GITHUB_PAGES === 'true' ? '/money-management/' : '/',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
@@ -53,7 +57,17 @@
     },
     build: {
       target: 'esnext',
-      outDir: 'build',
+      outDir: 'dist',
+      sourcemap: false,
+      minify: 'esbuild',
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom'],
+            supabase: ['@supabase/supabase-js'],
+          },
+        },
+      },
     },
     server: {
       port: 3000,

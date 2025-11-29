@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://seemoOF27.github.io/Personal-Finance-Management-PWA/sitemap.xml
+
