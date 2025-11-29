@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>توليد أيقونات PWA - إدارة الأموال</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #059669;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .description {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 40px;
+            font-size: 18px;
+        }
+        
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .icon-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .icon-card h2 {
+            color: #059669;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        canvas {
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            max-width: 100%;
+        }
+        
+        button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        button:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .instructions {
+            background: #dbeafe;
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid #93c5fd;
+        }
+        
+        .instructions h2 {
+            color: #1e40af;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .instructions ol {
+            list-style-position: inside;
+            color: #374151;
+            line-height: 2;
+            font-size: 16px;
+        }
+        
+        .instructions code {
+            background: #bfdbfe;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .success {
+            background: #d1fae5;
+            border: 2px solid #6ee7b7;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+            color: #065f46;
+            font-size: 18px;
+            display: none;
+        }
+        
+        .success.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 توليد أيقونات PWA</h1>
+        <p class="description">
+            اضغط على زر "تحميل" تحت كل أيقونة لحفظها في جهازك
+        </p>
+        
+        <div style="background: #fef3c7; padding: 20px; border-radius: 15px; margin-bottom: 30px; border: 2px solid #f59e0b;">
+            <p style="margin: 0; color: #92400e; font-size: 16px;">
+                💡 <strong>ملاحظة:</strong> يفضل استخدام الصفحة الداخلية في التطبيق:
+                <br><br>
+                <a href="/#download-icons" style="color: #059669; font-weight: bold; text-decoration: underline;">
+                    اذهب إلى: /#download-icons
+                </a>
+            </p>
+        </div>
+        
+        <div class="icons-grid">
+            <div class="icon-card">
+                <h2>أيقونة رئيسية (512×512)</h2>
+                <canvas id="appicon" width="512" height="512"></canvas>
+                <button onclick="downloadIcon('appicon', 'app-icon.png')">
+                    📥 تحميل app-icon.png
+                </button>
+            </div>
+            
+            <div class="icon-card">
+                <h2>أيقونة Apple (180×180)</h2>
+                <canvas id="icon180" width="180" height="180"></canvas>
+                <button onclick="downloadIcon('icon180', 'icon-180.png')">
+                    📥 تحميل icon-180.png
+                </button>
+            </div>
+            
+            <div class="icon-card">
+                <h2>أيقونة صغيرة (192×192)</h2>
+                <canvas id="icon192" width="192" height="192"></canvas>
+                <button onclick="downloadIcon('icon192', 'icon-192.png')">
+                    📥 تحميل icon-192.png
+                </button>
+            </div>
+            
+            <div class="icon-card">
+                <h2>أيقونة كبيرة (512×512)</h2>
+                <canvas id="icon512" width="512" height="512"></canvas>
+                <button onclick="downloadIcon('icon512', 'icon-512.png')">
+                    📥 تحميل icon-512.png
+                </button>
+            </div>
+            
+            <div class="icon-card">
+                <h2>أيقونة عالية الدقة (1024×1024)</h2>
+                <canvas id="icon1024" width="1024" height="1024"></canvas>
+                <button onclick="downloadIcon('icon1024', 'icon-1024.png')">
+                    📥 تحميل icon-1024.png
+                </button>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2>📋 التعليمات:</h2>
+            <ol>
+                <li>قم بتحميل جميع الأيقونات الخمسة باستخدام الأزرار أعلاه</li>
+                <li>ضع الملفات المحملة في مجلد <code>/public</code> في المشروع</li>
+                <li>تأكد من أن أسماء الملفات مطابقة: <code>app-icon.png</code>, <code>icon-180.png</code>, <code>icon-192.png</code>, <code>icon-512.png</code>, <code>icon-1024.png</code></li>
+                <li>أعد تشغيل التطبيق أو أعد تحميل الصفحة</li>
+                <li>اختبر التثبيت على iOS Safari: افتح التطبيق > Share > Add to Home Screen</li>
+                <li>الآن يجب أن يعمل التطبيق كـ PWA كامل مع أيقونة احترافية</li>
+            </ol>
+        </div>
+        
+        <div class="success" id="successMsg">
+            ✅ تم تحميل الأيقونة بنجاح!
+        </div>
+    </div>
+    
+    <script>
+        function drawIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Scale factor
+            const s = size / 180;
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#10b981');
+            gradient.addColorStop(1, '#059669');
+            
+            // Draw background circle
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, (size / 2) - (4 * s), 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw wallet body
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            ctx.fillRect(37 * s, 65 * s, 106 * s, 56 * s);
+            
+            // Draw wallet flap
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            ctx.moveTo(40 * s, 65 * s);
+            ctx.lineTo(40 * s, 50 * s);
+            ctx.quadraticCurveTo(40 * s, 42 * s, 48 * s, 42 * s);
+            ctx.lineTo(132 * s, 42 * s);
+            ctx.quadraticCurveTo(140 * s, 42 * s, 140 * s, 50 * s);
+            ctx.lineTo(140 * s, 65 * s);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Draw card slot
+            ctx.fillStyle = 'rgba(5, 150, 105, 0.6)';
+            ctx.fillRect(48 * s, 75 * s, 84 * s, 6 * s);
+            
+            // Draw Riyal symbol
+            ctx.fillStyle = '#059669';
+            ctx.font = `bold ${32 * s}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('ر.س', 90 * s, 100 * s);
+            
+            // Draw coins
+            ctx.fillStyle = '#fbbf24';
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 4 * s;
+            
+            // Large coin
+            ctx.beginPath();
+            ctx.arc(125 * s, 108 * s, 16 * s, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Small coin
+            ctx.lineWidth = 3 * s;
+            ctx.beginPath();
+            ctx.arc(55 * s, 108 * s, 12 * s, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+        }
+        
+        function downloadIcon(canvasId, fileName) {
+            const canvas = document.getElementById(canvasId);
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName;
+                link.click();
+                URL.revokeObjectURL(url);
+                
+                // Show success message
+                const successMsg = document.getElementById('successMsg');
+                successMsg.classList.add('show');
+                setTimeout(() => {
+                    successMsg.classList.remove('show');
+                }, 3000);
+            }, 'image/png');
+        }
+        
+        // Draw all icons on page load
+        window.addEventListener('load', () => {
+            drawIcon('appicon', 512);
+            drawIcon('icon180', 180);
+            drawIcon('icon192', 192);
+            drawIcon('icon512', 512);
+            drawIcon('icon1024', 1024);
+        });
+    </script>
+</body>
+</html>

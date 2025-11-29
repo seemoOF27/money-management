@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار حالة PWA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #059669;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .status-item {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .status-item.success {
+            background: #d1fae5;
+            border-color: #10b981;
+        }
+        
+        .status-item.warning {
+            background: #fef3c7;
+            border-color: #f59e0b;
+        }
+        
+        .status-item.error {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+        
+        .label {
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+        
+        .value {
+            color: #6b7280;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            background: #10b981;
+            color: white;
+        }
+        
+        button:hover {
+            background: #059669;
+        }
+        
+        .code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 10px 0;
+            overflow-x: auto;
+            direction: ltr;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 فحص حالة PWA</h1>
+        
+        <div id="results"></div>
+        
+        <button onclick="runTests()">🔄 إعادة الفحص</button>
+        <button onclick="window.location.href='/'">🏠 العودة للتطبيق</button>
+    </div>
+    
+    <script>
+        function checkStatus(condition, label, successMsg, failMsg) {
+            const statusClass = condition ? 'success' : 'error';
+            const icon = condition ? '✅' : '❌';
+            const message = condition ? successMsg : failMsg;
+            
+            return `
+                <div class="status-item ${statusClass}">
+                    <div class="label">${icon} ${label}</div>
+                    <div class="value">${message}</div>
+                </div>
+            `;
+        }
+        
+        function checkWarning(condition, label, warningMsg, okMsg) {
+            const statusClass = condition ? 'warning' : 'success';
+            const icon = condition ? '⚠️' : '✅';
+            const message = condition ? warningMsg : okMsg;
+            
+            return `
+                <div class="status-item ${statusClass}">
+                    <div class="label">${icon} ${label}</div>
+                    <div class="value">${message}</div>
+                </div>
+            `;
+        }
+        
+        async function runTests() {
+            const results = document.getElementById('results');
+            let html = '';
+            
+            // Check if running as PWA
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+                || window.navigator.standalone 
+                || document.referrer.includes('android-app://');
+            
+            html += checkStatus(
+                isStandalone,
+                'وضع التشغيل',
+                'يعمل كتطبيق مستقل (PWA) 🎉',
+                'يعمل في المتصفح - قم بإضافته إلى الشاشة الرئيسية'
+            );
+            
+            // Check online status
+            const isOnline = navigator.onLine;
+            html += checkStatus(
+                isOnline,
+                'حالة الاتصال',
+                'متصل بالإنترنت',
+                'غير متصل بالإنترنت'
+            );
+            
+            // Check Service Worker
+            const hasSW = 'serviceWorker' in navigator;
+            html += checkStatus(
+                hasSW,
+                'Service Worker',
+                'مدعوم في المتصفح',
+                'غير مدعوم - تحتاج متصفح حديث'
+            );
+            
+            if (hasSW) {
+                try {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    html += checkStatus(
+                        registrations.length > 0,
+                        'تسجيل Service Worker',
+                        `مسجل بنجاح (${registrations.length})`,
+                        'غير مسجل - أعد تحميل الصفحة'
+                    );
+                } catch (e) {
+                    html += checkStatus(false, 'تسجيل Service Worker', '', 'خطأ: ' + e.message);
+                }
+            }
+            
+            // Check manifest
+            const manifestLink = document.querySelector('link[rel="manifest"]');
+            html += checkStatus(
+                !!manifestLink,
+                'ملف Manifest',
+                'موجود في الصفحة',
+                'غير موجود'
+            );
+            
+            // Check if iOS
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            html += checkWarning(
+                isIOS,
+                'النظام',
+                'iOS Safari - يحتاج أيقونات PNG',
+                'نظام آخر - يدعم SVG'
+            );
+            
+            // Check for apple-touch-icon
+            const appleTouchIcon = document.querySelector('link[rel="apple-touch-icon"]');
+            html += checkStatus(
+                !!appleTouchIcon,
+                'أيقونة Apple',
+                'موجودة',
+                'غير موجودة - أضف icon-180.png'
+            );
+            
+            // Check HTTPS
+            const isHTTPS = location.protocol === 'https:' || location.hostname === 'localhost';
+            html += checkStatus(
+                isHTTPS,
+                'HTTPS',
+                'الموقع آمن',
+                'يحتاج HTTPS للعمل في الإنتاج'
+            );
+            
+            // Device info
+            html += `
+                <div class="status-item">
+                    <div class="label">📱 معلومات الجهاز</div>
+                    <div class="code">
+User Agent: ${navigator.userAgent}
+<br>
+Platform: ${navigator.platform}
+<br>
+Is Standalone: ${isStandalone}
+<br>
+Is iOS Standalone: ${navigator.standalone || false}
+<br>
+Display Mode: ${window.matchMedia('(display-mode: standalone)').matches ? 'standalone' : 'browser'}
+                    </div>
+                </div>
+            `;
+            
+            // Instructions
+            if (!isStandalone && isIOS) {
+                html += `
+                    <div class="status-item warning">
+                        <div class="label">📋 خطوات التثبيت على iOS</div>
+                        <div class="value">
+                            1️⃣ اضغط زر المشاركة (Share) في Safari<br>
+                            2️⃣ اختر "أضف إلى الشاشة الرئيسية"<br>
+                            3️⃣ اضغط "إضافة"<br>
+                            4️⃣ افتح التطبيق من الشاشة الرئيسية
+                        </div>
+                    </div>
+                `;
+            }
+            
+            results.innerHTML = html;
+        }
+        
+        // Run tests on load
+        window.addEventListener('load', runTests);
+        
+        // Update online status
+        window.addEventListener('online', runTests);
+        window.addEventListener('offline', runTests);
+    </script>
+</body>
+</html>
