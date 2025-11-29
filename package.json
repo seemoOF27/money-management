@@ -3,6 +3,7 @@
       "name": "Personal Finance Management PWA",
       "version": "0.1.0",
       "private": true,
+      "homepage": "https://seemoof27.github.io/money-management",
       "dependencies": {
           "@jsr/supabase__supabase-js": "^2.49.8",
           "@radix-ui/react-accordion": "^1.2.3",
