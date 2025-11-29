@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     
@@ -16,36 +16,36 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="إدارة الأموال" />
     
-    <!-- GitHub Pages SPA Fix -->
+    <!-- SPA GitHub Pages Fix -->
     <script>
       // Single Page Apps for GitHub Pages
-      // Check if we were redirected from 404.html
-      (function() {
-        var redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
-        if (redirect && redirect !== location.href) {
-          history.replaceState(null, null, redirect);
-        }
-      })();
+      // https://github.com/rafgraph/spa-github-pages
+      // Store the path when 404 occurs
+      sessionStorage.redirect = location.href;
     </script>
     
     <!-- Manifest -->
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="/money-management/manifest.json" />
     
     <!-- Icons -->
-    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
-    <link rel="apple-touch-icon" href="/icon-180.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/money-management/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/money-management/icon-512.png" />
+    <link rel="apple-touch-icon" href="/money-management/icon-180.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/money-management/icon-180.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/money-management/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/money-management/icon-512.png" />
     
     <!-- iOS Splash Screens -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  </head>
-
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    
+    <!-- Redirect to index.html -->
+    <meta http-equiv="refresh" content="0;URL='/money-management/'">
+</head>
+<body>
+    <script>
+      // Redirect to index.html immediately
+      window.location.replace('/money-management/' + window.location.pathname.replace('/money-management/', '').replace(/^\//, ''));
+    </script>
+</body>
 </html>
+

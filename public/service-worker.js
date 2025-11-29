@@ -1,14 +1,19 @@
 // Service Worker for PWA offline support
-const CACHE_NAME = 'finance-manager-v4';
+const CACHE_NAME = 'finance-manager-v5';
+
+// Detect if running on GitHub Pages
+const isGitHubPages = location.hostname.includes('github.io');
+const basePath = isGitHubPages ? '/money-management' : '';
+
 const urlsToCache = [
-  '/',
-  '/manifest.json',
-  '/app-icon.png',
-  '/icon-180.png',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/icon-1024.png',
-  '/offline.html'
+  `${basePath}/`,
+  `${basePath}/manifest.json`,
+  `${basePath}/app-icon.svg`,
+  `${basePath}/icon-180.png`,
+  `${basePath}/icon-192.png`,
+  `${basePath}/icon-512.png`,
+  `${basePath}/icon-1024.png`,
+  `${basePath}/offline.html`
 ];
 
 // Install event - cache resources
@@ -18,7 +23,14 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('[SW] Caching app shell');
-        return cache.addAll(urlsToCache);
+        // Try to cache all URLs, but don't fail if some are missing
+        return Promise.allSettled(
+          urlsToCache.map(url => 
+            cache.add(url).catch(err => {
+              console.warn(`[SW] Failed to cache ${url}:`, err);
+            })
+          )
+        );
       })
       .then(() => self.skipWaiting())
   );
@@ -50,7 +62,7 @@ self.addEventListener('fetch', (event) => {
         // Return offline page for navigation requests
         console.log('[SW] Fetch failed, returning offline page');
         if (event.request.mode === 'navigate') {
-          return caches.match('/offline.html');
+          return caches.match(`${basePath}/offline.html`);
         }
       })
   );
